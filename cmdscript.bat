@@ -12,8 +12,8 @@ if "%answer%"=="yes" (
         docker pull %image_name%
     ) else (
         docker login
-        docker pull andriipanchuk/workimage:v6
-        set image_name="andriipanchuk/workimage:v6"
+        docker pull andriipanchuk/workimage:v4
+        set image_name="andriipanchuk/workimage:v4"
     )
     
     set /p container_name="Enter a name for the new container: "
@@ -29,7 +29,8 @@ if "%answer%"=="yes" (
     echo Starting new container...
     docker run -v %cd%:/opt -w /opt -d -p 2222:22 --name %container_name% %image_name%
     echo Container %container_name% started.
-    ssh root@localhost -p 2222
+    ssh root@localhost -p 2222 -t "cd /opt; bash"
+
 ) else (
     echo The most recent containers are:
     docker ps -a --format "{{.Names}}" | find /N /V ""
@@ -39,5 +40,6 @@ if "%answer%"=="yes" (
     echo Container %container_name% has been started.
     echo Password is "12345"
     echo if you see error when you try ssh you need to clean your known_hosts.
-    ssh root@localhost -p 2222
+    ssh ssh root@localhost -p 2222 -t "cd /opt; bash"
+
 )
